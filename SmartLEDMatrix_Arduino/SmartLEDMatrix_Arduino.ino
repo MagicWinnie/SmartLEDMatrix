@@ -26,6 +26,7 @@ void setup()
   clearAllPixels();
 }
 
+String is_showed = "";
 String prev = "";
 uint32_t col_T = strip.Color(75, 0, 255);
 uint32_t col_else = strip.Color(0, 0, 0);
@@ -57,6 +58,16 @@ void drawString(String s, uint32_t color)
     {
       drawSymbol(s[i] - ' ', x, color, 0);
       x += W + SPC;
+    }
+  }
+  else{
+    if(is_showed == ""){
+      is_showed = s;
+      int x = (LED_WIDTH - (5 * W + 4)) / 2;
+      for(int i = 0; i < 4; i++){
+        drawSymbol(s[i] - ' ', x, color, 0);
+        x += W + SPC;
+      }
     }
   }
   strip.show();
