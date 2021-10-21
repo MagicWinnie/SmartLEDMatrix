@@ -31,7 +31,7 @@ uint32_t col_T = strip.Color(75, 0, 255);
 uint32_t col_else = strip.Color(0, 0, 0);
 int count = 0;
 double shft = 0;
-int length_date = W*5 + 4 * spc;
+int length_date = W*5 + 4 * SPC;
 int shift_prev = 0;
 
 void loop()
@@ -74,7 +74,7 @@ void drawTime(uint32_t col, int shift)
     for (int i = 0; i < 5; i++)
     {
       drawSymbol(t[i] - ' ', lastX - shift, col, 0);
-      lastX += W + spc;
+      lastX += W + SPC;
     }
   }
   else if (t != prev)
@@ -84,7 +84,7 @@ void drawTime(uint32_t col, int shift)
     {
       if (t[i] != prev[i])
         drawSymbol(t[i] - ' ', lastX - shift, col, 0);
-      lastX += W + spc;
+      lastX += W + SPC;
     }
     prev = t;
   }
