@@ -79,8 +79,8 @@ void drawString(String s, uint32_t color, int cycle_delay)
       strip.show();
       delay(cycle_delay);
     }
-    clear(0, 0, LED_WIDTH, LED_HEIGHT);
   }
+  clear(0, 0, LED_WIDTH, LED_HEIGHT);
   strip.show();
 }
 
@@ -92,23 +92,12 @@ void drawTime(uint32_t col, int shift)
   {
     clear(0, 0, LED_WIDTH, LED_HEIGHT - 1);
     shift_prev = shift;
-    int lastX = (LED_WIDTH - length_date) / 2;
-    for (int i = 0; i < 5; i++)
-    {
-      drawSymbol(t[i] - ' ', lastX - shift, col, true, 0);
-      lastX += W + SPC;
-    }
   }
-  else if (t != prev)
+  int lastX = (LED_WIDTH - length_date) / 2;
+  for (int i = 0; i < 5; i++)
   {
-    int lastX = (LED_WIDTH - length_date) / 2;
-    for (int i = 0; i < 5; i++)
-    {
-      if (t[i] != prev[i])
-        drawSymbol(t[i] - ' ', lastX - shift, col, true, 0);
-      lastX += W + SPC;
-    }
-    prev = t;
+    drawSymbol(t[i] - ' ', lastX - shift, col, true, 0);
+    lastX += W + SPC;
   }
   strip.show();
 }
