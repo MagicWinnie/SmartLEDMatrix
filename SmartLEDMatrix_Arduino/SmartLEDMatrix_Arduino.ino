@@ -61,13 +61,11 @@ void loop()
                 strip.Color(
                     getValue(c, ',', 0).toInt(),
                     getValue(c, ',', 1).toInt(),
-                    getValue(c, ',', 2).toInt()
-                ),
+                    getValue(c, ',', 2).toInt()),
                 100,
-                1500
-            );
+                1500);
         }
-        else 
+        else
         {
             // int countCommaD = 0;
             // for (int i = 0; i < d.length(); i++)
@@ -96,7 +94,6 @@ void loop()
         // Serial.println("");
     }
 
-
     for (int i = 0; i < LED_WIDTH; i++)
         light(i, 7, strip.gamma32(strip.ColorHSV(count + (256 * (i + (LED_WIDTH - 1))) % (5 * 65536))));
     drawTime(col_T, (int)shft / 10);
@@ -111,43 +108,43 @@ void loop()
 
 void drawString(String s, uint32_t color, int cycle_delay, int wait)
 {
-  clear(0, 0, LED_WIDTH, LED_HEIGHT);
-  if (s.length() <= 5)
-  {
-    int x = (LED_WIDTH - (s.length() * W + s.length() - 1)) / 2;
-    for (int i = 0; i < s.length(); i++)
+    clear(0, 0, LED_WIDTH, LED_HEIGHT);
+    if (s.length() <= 5)
     {
-      drawSymbol(s[i] - ' ', x, color, false, 0);
-      x += W + SPC;
+        int x = (LED_WIDTH - (s.length() * W + s.length() - 1)) / 2;
+        for (int i = 0; i < s.length(); i++)
+        {
+            drawSymbol(s[i] - ' ', x, color, false, 0);
+            x += W + SPC;
+        }
+        strip.show();
+        delay(wait);
     }
-    strip.show();       
-    delay(wait);
-  }
-  else
-  {
-    int start = (LED_WIDTH - (5 * W + 4)) / 2;
-    int x = start;
-    for (int i = 0; x < LED_WIDTH; i++)
+    else
     {
-      drawSymbol(s[i] - ' ', x, color, false, 0);
-      x += W + SPC;
+        int start = (LED_WIDTH - (5 * W + 4)) / 2;
+        int x = start;
+        for (int i = 0; x < LED_WIDTH; i++)
+        {
+            drawSymbol(s[i] - ' ', x, color, false, 0);
+            x += W + SPC;
+        }
+        strip.show();
+        delay(wait);
+        x = start - 1;
+        for (; - x < s.length() * W + (s.length() - 1) * SPC; x--)
+        {
+            clear(0, 0, LED_WIDTH, LED_HEIGHT);
+            for (int i = 0; i < s.length(); i++)
+            {
+                drawSymbol(s[i] - ' ', x + i * (W + SPC), color, false, 0);
+            }
+            strip.show();
+            delay(cycle_delay);
+        }
     }
+    clear(0, 0, LED_WIDTH, LED_HEIGHT);
     strip.show();
-    delay(wait);
-    x = start - 1;
-    for (; - x < s.length() * W + (s.length() - 1) * SPC; x--)
-    {
-      clear(0, 0, LED_WIDTH, LED_HEIGHT);
-      for (int i = 0; i < s.length(); i++)
-      {
-        drawSymbol(s[i] - ' ', x + i * (W + SPC), color, false, 0);
-      }
-      strip.show();
-      delay(cycle_delay);
-    }
-  }
-  clear(0, 0, LED_WIDTH, LED_HEIGHT);
-  strip.show();   
 }
 
 // get a_index from a = data.split(separator)
@@ -183,19 +180,19 @@ String getStringBT()
 // time visualizer
 void drawTime(uint32_t col, int shift)
 {
-  String t = rtc.getTimeString().substring(0, 5);
-  if (shift != shift_prev)
-  {
-    clear(0, 0, LED_WIDTH, LED_HEIGHT - 1);
-    shift_prev = shift;
-  }
-  int lastX = (LED_WIDTH - length_date) / 2;
-  for (int i = 0; i < 5; i++)
-  {
-    drawSymbol(t[i] - ' ', lastX - shift, col, true, 0);
-    lastX += W + SPC;
-  }
-  strip.show();
+    String t = rtc.getTimeString().substring(0, 5);
+    if (shift != shift_prev)
+    {
+        clear(0, 0, LED_WIDTH, LED_HEIGHT - 1);
+        shift_prev = shift;
+    }
+    int lastX = (LED_WIDTH - length_date) / 2;
+    for (int i = 0; i < 5; i++)
+    {
+        drawSymbol(t[i] - ' ', lastX - shift, col, true, 0);
+        lastX += W + SPC;
+    }
+    strip.show();
 }
 
 int cycleX(int i)
