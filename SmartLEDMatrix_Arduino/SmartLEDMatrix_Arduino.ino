@@ -24,9 +24,10 @@ void setup()
   strip.setBrightness(LED_BRIGHTNESS);
 
   clearAllPixels();
+  drawString(rtc.getDateString(), strip.Color(0, 255, 0), 100);
 }
 
-String is_showed = "";
+// String is_shown = "";
 String prev = "";
 uint32_t col_T = strip.Color(75, 0, 255);
 uint32_t col_else = strip.Color(0, 0, 0);
@@ -49,26 +50,36 @@ void loop()
     count = 0;
 }
 
-void drawString(String s, uint32_t color)
+void drawString(String s, uint32_t color, int cycle_delay)
 {
   if (s.length() <= 5)
   {
     int x = (LED_WIDTH - (s.length() * W + s.length() - 1)) / 2;
     for (int i = 0; i < s.length(); i++)
     {
-      drawSymbol(s[i] - ' ', x, color, 0);
+      drawSymbol(s[i] - ' ', x, color, false, 0);
       x += W + SPC;
     }
   }
   else{
-    if(is_showed == ""){
-      is_showed = s;
-      int x = (LED_WIDTH - (5 * W + 4)) / 2;
-      for(int i = 0; i < 4; i++){
-        drawSymbol(s[i] - ' ', x, color, 0);
-        x += W + SPC;
-      }
+    int start = (LED_WIDTH - (5 * W + 4)) / 2;
+    int x = start;
+    for(int i = 0; x < LED_WIDTH; i++){
+      drawSymbol(s[i] - ' ', x, color, false, 0);
+      x += W + SPC;
     }
+    strip.show();
+    delay(1500);
+    x = start-1;
+    for(; -x < s.length()*W + (s.length()-1)*SPC; x--){
+      clear(0, 0, LED_WIDTH, LED_HEIGHT);
+      for(int i = 0; i < s.length(); i++){
+        drawSymbol(s[i] - ' ', x + i*(W+SPC), color, false, 0);
+      }
+      strip.show();
+      delay(cycle_delay);
+    }
+    clear(0, 0, LED_WIDTH, LED_HEIGHT);
   }
   strip.show();
 }
@@ -84,7 +95,7 @@ void drawTime(uint32_t col, int shift)
     int lastX = (LED_WIDTH - length_date) / 2;
     for (int i = 0; i < 5; i++)
     {
-      drawSymbol(t[i] - ' ', lastX - shift, col, 0);
+      drawSymbol(t[i] - ' ', lastX - shift, col, true, 0);
       lastX += W + SPC;
     }
   }
@@ -94,7 +105,7 @@ void drawTime(uint32_t col, int shift)
     for (int i = 0; i < 5; i++)
     {
       if (t[i] != prev[i])
-        drawSymbol(t[i] - ' ', lastX - shift, col, 0);
+        drawSymbol(t[i] - ' ', lastX - shift, col, true, 0);
       lastX += W + SPC;
     }
     prev = t;
@@ -144,7 +155,7 @@ void clearAllPixels()
 // | y
 // V
 // draw one symbol with code n at start with color
-void drawSymbol(int n, int start, uint32_t color, int wait)
+void drawSymbol(int n, int start, uint32_t color,  bool cycle, int wait)
 {
   for (int i = 0; i < W; i++)
   {
@@ -152,11 +163,17 @@ void drawSymbol(int n, int start, uint32_t color, int wait)
     {
       if (pgm_read_byte(&Symbols[n][j][i]))
       {
-        light(cycleX(i + start), cycleY(j), color);
+        if(cycle)
+          light(cycleX(i + start), cycleY(j), color);
+        else if(i+start >= 0 && i+start < LED_WIDTH && j >= 0 && j < LED_HEIGHT)
+          light(i+start, j, color);
         delay(wait);
       }
       else{
-        light(cycleX(i + start), cycleY(j), strip.Color(0,0,0));
+        if(cycle)
+          light(cycleX(i + start), cycleY(j), strip.Color(0,0,0));
+        else if(i+start >= 0 && i+start < LED_WIDTH && j >= 0 && j < LED_HEIGHT)
+          light(i+start, j, strip.Color(0,0,0));
       }
     }
   }
